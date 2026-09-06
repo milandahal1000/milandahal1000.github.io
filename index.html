@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Milan Dahal — Portfolio</title>
+<meta name="description" content="Milan Dahal — Web Developer from Kathmandu, Nepal." />
+<meta name="author" content="Milan Dahal" />
+<meta property="og:title" content="Milan Dahal — Portfolio" />
+<meta property="og:description" content="Web Developer from Kathmandu, Nepal. Explore my work, skills and experience." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23007acc'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='15' font-weight='bold' fill='white' font-family='monospace'%3EM%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════ Loading splash ═══════════ -->
+<div id="loading">
+  <div class="load-inner">
+    <svg class="vscode-logo" viewBox="0 0 24 24" width="44" height="44"><path fill="#4fc1ff" d="M17.9 2.1 9.7 9.9 5 6.4 3 7.4l4.6 4.6L3 16.6l2 1 4.7-3.5 8.2 7.8 3.1-1.5V3.6L17.9 2.1zm.6 5.3v9.2l-5.6-4.6 5.6-4.6z"/></svg>
+    <div class="load-text">Opening MILAN_PORTFOLIO...</div>
+    <div class="load-bar"><span></span></div>
+  </div>
+</div>
+
+<!-- ═══════════ Title Bar ═══════════ -->
+<header class="titlebar">
+  <div class="tb-left">
+    <svg class="vscode-logo" viewBox="0 0 24 24" width="17" height="17"><path fill="#4fc1ff" d="M17.9 2.1 9.7 9.9 5 6.4 3 7.4l4.6 4.6L3 16.6l2 1 4.7-3.5 8.2 7.8 3.1-1.5V3.6L17.9 2.1zm.6 5.3v9.2l-5.6-4.6 5.6-4.6z"/></svg>
+    <span class="tb-menu"><span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>Go</span><span>Run</span><span>Terminal</span><span>Help</span></span>
+  </div>
+  <div class="tb-center" id="tb-title">Milan Dahal — Portfolio</div>
+  <div class="tb-right">
+    <button class="title-btn" id="btn-theme" title="Toggle Dark Mode">
+      <svg class="icon-sun" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M12.6 3.4l-1.4 1.4M4.8 11.2l-1.4 1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M13 8.5A5.5 5.5 0 017.5 3a.5.5 0 00-.6-.6A6 6 0 1013.6 9.1a.5.5 0 00-.6-.6z"/></svg>
+    </button>
+    <button class="title-btn" id="btn-bell" title="Notifications">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 11l1-1V7a4 4 0 018 0v3l1 1H3zm3 2a2 2 0 004 0"/></svg>
+      <span class="notif-badge" id="notif-badge"></span>
+    </button>
+    <span class="win-btn">—</span><span class="win-btn">▢</span><span class="win-btn close">✕</span>
+  </div>
+</header>
+
+<!-- ═══════════ Notification Center ═══════════ -->
+<div class="notif-center" id="notif-center">
+  <div class="notif-head">
+    <span>Notifications</span>
+    <button id="notif-clear">Clear All</button>
+  </div>
+  <ul class="notif-list" id="notif-list"></ul>
+  <div class="notif-foot">Click a notification to open its file</div>
+</div>
+
+<div class="workbench">
+  <!-- ═══════════ Activity Bar ═══════════ -->
+  <nav class="activity-bar">
+    <button class="act-btn active" title="Explorer" data-act="explorer">
+      <svg viewBox="0 0 16 16" width="22" height="22"><path fill="currentColor" d="M9.5 1H3.5L2 2.5v11L3.5 15h9l1.5-1.5V5L9.5 1zm0 1.6L12.4 5H9.5V2.6zM13 13.5l-.5.5h-9l-.5-.5v-11l.5-.5H8v4h5v7.5z"/></svg>
+      <span class="badge" id="explorer-badge">7</span>
+    </button>
+    <button class="act-btn" title="Search" data-act="search">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="4.2"/><path d="M9.7 9.7l4 4"/></svg>
+    </button>
+    <button class="act-btn" title="Source Control" data-act="git">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="3.5" r="1.7"/><circle cx="4" cy="12.5" r="1.7"/><circle cx="12" cy="7" r="1.7"/><path d="M4 5.2v5.6M12 8.7c0 2-2.5 2.3-6.3 2.5"/></svg>
+    </button>
+    <button class="act-btn" title="Run and Debug" data-act="debug">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M4.5 2.5l8 5.5-8 5.5z"/></svg>
+    </button>
+    <button class="act-btn" title="Extensions" data-act="ext">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><path d="M11.5 9v5M9 11.5h5"/></svg>
+    </button>
+    <div class="act-spacer"></div>
+    <button class="act-btn" title="Account" data-act="account">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="5.5" r="2.7"/><path d="M2.8 13.5c.8-2.6 2.8-3.8 5.2-3.8s4.4 1.2 5.2 3.8"/></svg>
+    </button>
+    <button class="act-btn" title="Settings" data-act="settings">
+      <svg viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M12.6 3.4l-1.4 1.4M4.8 11.2l-1.4 1.4"/></svg>
+    </button>
+  </nav>
+<!-- ═══════════ Sidebar (Explorer) ═══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-title">Explorer</div>
+    <div id="profile-card" class="profile-card"></div>
+    <div class="sb-block">
+      <div class="sb-head collapse"><span class="chev">▾</span> MILAN_PORTFOLIO</div>
+      <ul class="file-tree" id="file-tree"></ul>
+      <div class="sb-subtree">
+        <div class="tree-root"><span class="chev">▾</span><span class="dot folder"></span>assets</div>
+        <ul class="file-tree">
+          <li class="file-item sub disabled"><span class="dot img"></span>avatar.png</li>
+          <li class="file-item sub disabled"><span class="dot img"></span>project-shots/</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sb-block">
+      <div class="sb-head">Outline</div>
+      <ul class="outline-list" id="outline"></ul>
+    </div>
+    <div class="sb-block">
+      <div class="sb-head">Timeline</div>
+      <ul class="outline-list dim" id="timeline"></ul>
+    </div>
+  </aside>
+
+  <!-- ═══════════ Editor Area ═══════════ -->
+  <main class="editor-area">
+    <div class="tabs" id="tabs"></div>
+    <div class="toolbar-row">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <button class="toolbar-btn" id="open-search" title="Find in files (Ctrl+Shift+F)">🔍</button>
+    </div>
+    <div class="editor-viewport" id="viewport">
+      <section class="tab-panel" id="panel-home"></section>
+      <section class="tab-panel" id="panel-about"></section>
+      <section class="tab-panel" id="panel-experience"></section>
+      <section class="tab-panel" id="panel-skills"></section>
+      <section class="tab-panel" id="panel-projects"></section>
+      <section class="tab-panel" id="panel-contact"></section>
+    </div>
+  </main>
+</div>
+<!-- ═══════════ Terminal Panel ═══════════ -->
+<div class="panel" id="terminal-panel">
+  <div class="panel-head">
+    <span class="panel-tab active">Terminal</span>
+    <span class="panel-tab">Problems</span>
+    <span class="panel-tab">Output</span>
+    <div class="panel-actions"><span>Ctrl+`</span><button id="panel-close" title="Close panel">✕</button></div>
+  </div>
+  <div class="panel-body" id="terminal-body"></div>
+  <div class="panel-input">
+    <span class="t-prompt">milan@portfolio:~$</span>
+    <input id="terminal-input" autocomplete="off" spellcheck="false" placeholder="type 'help' for commands" />
+  </div>
+</div>
+
+<!-- ═══════════ Status Bar ═══════════ -->
+<footer class="status-bar">
+  <div class="sb-left">
+    <button class="status-item" id="status-branch">⑂ main*</button>
+    <button class="status-item" id="status-problems">ⓧ 0 ⚠ 0</button>
+    <span class="status-item live" id="go-live" title="Start live server">⚡ Go Live</span>
+  </div>
+  <div class="sb-right">
+    <span class="status-item pos" id="status-pos">Ln 1, Col 1</span>
+    <span class="status-item sp">Spaces: 2</span>
+    <span class="status-item">UTF-8</span>
+    <span class="status-item" id="status-lang">Markdown</span>
+    <button class="status-item" id="status-mode" title="Toggle Dark Mode">🌙 Dark</button>
+    <span class="status-item" id="status-time">Kathmandu ...</span>
+  </div>
+</footer>
+
+<!-- ═══════════ Command Palette ═══════════ -->
+<div class="palette-overlay overlay" id="palette-overlay">
+  <div class="palette">
+    <input id="palette-input" placeholder="Type a command..." spellcheck="false" />
+    <ul id="palette-list"></ul>
+  </div>
+</div>
+
+<!-- ═══════════ Search Overlay ═══════════ -->
+<div class="overlay search-overlay" id="search-overlay">
+  <div class="search-box">
+    <div class="search-head">
+      <span>🔍 Find in files</span>
+      <button class="close-x" id="search-close">✕</button>
+    </div>
+    <input id="search-input" placeholder="Search skills, projects, experience..." spellcheck="false" />
+    <ul id="search-results"></ul>
+    <div class="search-foot" id="search-count"></div>
+  </div>
+</div>
+
+<!-- ═══════════ Settings Modal ═══════════ -->
+<div class="overlay modal-overlay" id="settings-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <span>⚙ Settings</span>
+      <button class="close-x" id="settings-close">✕</button>
+    </div>
+    <div class="modal-body" id="settings-body"></div>
+  </div>
+</div>
+
+<!-- ═══════════ Project Detail Modal ═══════════ -->
+<div class="overlay modal-overlay" id="project-overlay">
+  <div class="modal project-modal">
+    <div class="modal-head">
+      <span>📄 Project Details</span>
+      <button class="close-x" id="project-close">✕</button>
+    </div>
+    <div class="modal-body" id="project-body"></div>
+  </div>
+</div>
+
+<!-- ═══════════ Toasts ═══════════ -->
+<div class="toasts" id="toasts"></div>
+
+<!-- ═══════════ Scroll to top ═══════════ -->
+<button class="scroll-top" id="scroll-top" title="Scroll to top">↑</button>
+
+<!-- ═══════════ Mobile drawer ═══════════ -->
+<button class="mobile-fab" id="mobile-fab" title="Files">📂</button>
+<div class="overlay drawer-overlay" id="drawer-overlay">
+  <div class="drawer">
+    <div class="drawer-head">Files</div>
+    <ul class="file-tree" id="drawer-list"></ul>
+  </div>
+</div>
+
+<!-- ═══════════ Data + Logic ═══════════ -->
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
