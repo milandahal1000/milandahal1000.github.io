@@ -918,6 +918,8 @@ async function fetchGitHub() {
       const i = stat.findIndex(s => s.label === 'Projects Built');
       if (i >= 0) stat[i].value = u.public_repos;
     }
+    // Re-render home to update the projects count
+    renderHome();
   } catch { /* offline — fall back to emoji */ }
 }
 
@@ -1067,6 +1069,8 @@ async function fetchGitHubProjects() {
 
     // Re-render projects section with actual data
     renderProjects();
+    // Re-render home to update the projects count
+    renderHome();
 
     // Notify user of successful update
     notify('success', 'Projects updated', `Loaded ${projects.length} projects from GitHub`, 'projects.json');
@@ -1077,6 +1081,93 @@ async function fetchGitHubProjects() {
     notify('error', 'Failed to load projects', 'Could not fetch projects from GitHub. Using cached data.', 'projects.json');
     // Re-render to show any cached data or empty state
     renderProjects();
+  }
+}
+
+// Fetch and process skills from GitHub repositories
+async function fetchGitHubSkills() {
+  try {
+    // Fetch fresh data from GitHub API
+    const response = await fetch('https://api.github.com/users/milandahal1000/repos?sort=updated&direction=desc&per_page=100', {
+      headers: {
+        'User-Agent': 'Milan-Portfolio/1.0'
+      }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch repos: ${response.status}`);
+
+    const repos = await response.json();
+
+    // Filter out forks and archived repositories
+    const filteredRepos = repos.filter(repo =>
+      !repo.fork &&
+      !repo.archived
+    );
+
+    // Collect language statistics
+    const languageStats = {};
+    let totalRepos = filteredRepos.length;
+
+    filteredRepos.forEach(repo => {
+      const language = repo.language;
+      if (language) {
+        if (!languageStats[language]) {
+          languageStats[language] = {
+            count: 0,
+            stars: 0,
+            forks: 0
+          };
+        }
+        languageStats[language].count++;
+        languageStats[language].stars += repo.stargazers_count || 0;
+        languageStats[language].forks += repo.forks_count || 0;
+      }
+    });
+
+    // Convert to skills format with proficiency levels
+    const skills = Object.entries(languageStats).map(([language, stats]) => {
+      // Calculate proficiency based on repo count, stars, and forks
+      // Normalize to 0-100 scale
+      const repoScore = Math.min((stats.count / totalRepos) * 100, 100);
+      const starScore = Math.min((stats.stars / 100) * 10, 100); // Cap at 100 stars for max score
+      const forkScore = Math.min((stats.forks / 50) * 10, 100); // Cap at 50 forks for max score
+
+      // Weighted average: 50% repo count, 30% stars, 20% forks
+      const proficiency = Math.round(
+        (repoScore * 0.5) + (starScore * 0.3) + (forkScore * 0.2)
+      );
+
+      // Ensure minimum proficiency if we have at least one repo
+      return {
+        name: language,
+        level: Math.max(proficiency, stats.count > 0 ? 10 : 0)
+      };
+    });
+
+    // Sort by proficiency descending
+    skills.sort((a, b) => b.level - a.level);
+
+    // Limit to top skills (e.g., top 10)
+    const topSkills = skills.slice(0, 10);
+
+    // Update the skills data
+    if (D.skills) {
+      // Update languages section with fetched data
+      D.skills.languages = topSkills.map(skill => ({
+        name: skill.name,
+        level: skill.level
+      }));
+    }
+
+    // Notify user of successful update
+    notify('success', 'Skills updated', `Loaded ${topSkills.length} skills from GitHub`, 'skills.json');
+
+    // Re-render skills section
+    renderSkills();
+
+  } catch (error) {
+    console.error('Error fetching GitHub skills:', error);
+    // Notify user of error
+    notify('error', 'Failed to load skills', 'Could not fetch skills from GitHub.', 'skills.json');
   }
 }
 
@@ -1119,6 +1210,7 @@ function init() {
   startClock();
   fetchGitHub();
   fetchGitHubProjects(); // Fetch and load projects from GitHub
+  fetchGitHubSkills(); // Fetch and load skills from GitHub
   tprint('Milan Dahal — Portfolio Terminal v2.0', 'ok');
   tprint("Type 'help' to see available commands.", 'info');
   notify('info', 'Welcome to my portfolio 👋', 'Scroll through my work, search (Ctrl+F), or press Ctrl+Shift+P.', 'index.html');
