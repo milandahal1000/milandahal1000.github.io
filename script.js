@@ -360,6 +360,20 @@ function animateBars() {
 }
 /* ─── Render: Projects ─── */
 function renderProjects() {
+  // Handle loading state - if projects array is empty, show loading message
+  if (!D.projects || D.projects.length === 0) {
+    $('#panel-projects').innerHTML = `
+      <p class="sec-comment">// projects.json — loading from GitHub...</p>
+      <h2>My Work</h2>
+      <p class="md-sub">Fetching your latest projects from GitHub...</p>
+      <div class="cards">
+        <p class="md-sub">Loading...</p>
+      </div>
+      ${ctaBlock()}
+    `;
+    return;
+  }
+
   const cats = ['All', ...new Set((D.projects || []).map(p => p.category))];
   const shown = D.projects.filter(p => projFilter === 'All' || p.category === projFilter);
   const filterChips = cats.map(c =>
@@ -492,6 +506,7 @@ function buildCommands() {
     ...THEMES.map(t => ({ label: `Theme: ${t.name}`, hint: t.accent, run: () => setAccent(t.id) })),
     { label: 'Hire Milan Dahal', hint: '!', run: () => openFile('contact.html') },
     { label: '🥷 Matrix rain (terminal)', hint: 'easter egg', run: () => { toggleTerminal(true); matrixRain(); } },
+    { label: 'Refresh Projects from GitHub', hint: '🔄', run: () => { fetchGitHubProjects(); } },
   );
   return cmds;
 }
@@ -889,7 +904,11 @@ function startClock() {
 /* ─── GitHub profile (live) ─── */
 async function fetchGitHub() {
   try {
-    const r = await fetch('https://api.github.com/users/milandahal1000');
+    const r = await fetch('https://api.github.com/users/milandahal1000', {
+      headers: {
+        'User-Agent': 'Milan-Portfolio/1.0'
+      }
+    });
     if (!r.ok) return;
     const u = await r.json();
     const av = $('.pc-avatar');
@@ -900,6 +919,165 @@ async function fetchGitHub() {
       if (i >= 0) stat[i].value = u.public_repos;
     }
   } catch { /* offline — fall back to emoji */ }
+}
+
+// Cache for GitHub projects to avoid excessive API calls
+let githubProjectsCache = null;
+let githubProjectsCacheTimestamp = 0;
+const GITHUB_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+/* ─── Fetch and transform GitHub repositories to projects ─── */
+async function fetchGitHubProjects() {
+  try {
+    // Check if we have valid cached data
+    const now = Date.now();
+    if (githubProjectsCache && (now - githubProjectsCacheTimestamp) < GITHUB_CACHE_DURATION) {
+      // Use cached data
+      window.PORTFOLIO_DATA.projects = githubProjectsCache;
+
+      // Update the projects count in stats
+      const stat = D.profile.stats || [];
+      const i = stat.findIndex(s => s.label === 'Projects Built');
+      if (i >= 0) stat[i].value = githubProjectsCache.length;
+
+      // Re-render projects section with cached data
+      renderProjects();
+
+      // Notify user of cache usage
+      notify('info', 'Projects loaded from cache', `Showing ${githubProjectsCache.length} cached projects from GitHub`, 'projects.json');
+      return;
+    }
+
+    // Fetch fresh data from GitHub API
+    const response = await fetch('https://api.github.com/users/milandahal1000/repos?sort=updated&direction=desc&per_page=100', {
+      headers: {
+        'User-Agent': 'Milan-Portfolio/1.0'
+      }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch repos: ${response.status}`);
+
+    const repos = await response.json();
+
+    // Filter out forks and archived repositories
+    const filteredRepos = repos.filter(repo =>
+      !repo.fork &&
+      !repo.archived
+    );
+
+    // Transform repos to project format
+    const projects = filteredRepos.map(repo => {
+      // Determine emoji based on primary language
+      const emojiMap = {
+        'JavaScript': '💻',
+        'TypeScript': '💻',
+        'Python': '🐍',
+        'Java': '☕',
+        'HTML': '🎨',
+        'CSS': '🎨',
+        'Go': '🐹',
+        'Rust': '🦀',
+        'PHP': '🐘',
+        'Ruby': '💎',
+        'C++': '⚙️',
+        'C': '⚙️',
+        'Shell': '💻',
+        'Vue': '💚',
+        'Svelte': '💙',
+        'Dart': '🎯',
+        'Kotlin': '🟣',
+        'Swift': '🟧',
+        'Default': '📁'
+      };
+
+      const language = repo.language || 'Default';
+      const emoji = emojiMap[language] || emojiMap.Default;
+
+      // Determine category based on topics and language
+      const topics = repo.topics || [];
+      let category = 'Other';
+
+      // Check topics for category hints
+      const topicString = topics.join(' ').toLowerCase();
+      if (topicString.includes('frontend') || topicString.includes('ui') || topicString.includes('ux')) {
+        category = 'Frontend';
+      } else if (topicString.includes('backend') || topicString.includes('api') || topicString.includes('server')) {
+        category = 'Backend';
+      } else if (topicString.includes('fullstack') || topicString.includes('full-stack')) {
+        category = 'Full-stack';
+      } else if (topicString.includes('mobile') || topicString.includes('android') || topicString.includes('ios')) {
+        category = 'Mobile';
+      } else if (topicString.includes('data') || topicString.includes('analytics') || topicString.includes('machine learning') || topicString.includes('ai')) {
+        category = 'Data Science';
+      } else {
+        // Fallback to language-based categorization
+        const lang = (repo.language || '').toLowerCase();
+        if (['javascript', 'typescript', 'html', 'css', 'vue', 'svelte'].includes(lang)) {
+          category = 'Frontend';
+        } else if (['python', 'java', 'go', 'rust', 'php', 'ruby', 'c', 'cpp', 'c#', 'dotnet'].includes(lang)) {
+          category = 'Backend';
+        } else {
+          category = 'Full-stack'; // Default fallback
+        }
+      }
+
+      // Create blurb (short description)
+      const blurb = repo.description || `A ${language} project${repo.fork ? ' (fork)' : ''} hosted on GitHub`;
+
+      // Create description (can be same as blurb or more detailed)
+      const description = repo.description || `GitHub repository: ${repo.name}${repo.description ? ` - ${repo.description}` : ''}`;
+
+      // Extract features from README or use placeholder
+      // For now, we'll use some basic features based on repo properties
+      const features = [];
+      if (repo.language) features.push(`Built with ${repo.language}`);
+      if (repo.stargazers_count > 0) features.push(`${repo.stargazers_count} ⭐ Stars`);
+      if (repo.forks_count > 0) features.push(`${repo.forks_count} 🍴 Forks`);
+      if (!repo.private) features.push('Publicly available');
+      if (features.length === 0) features.push('Source code available');
+
+      // Tags: language + topics
+      const tags = [...(topics || []), repo.language].filter(Boolean);
+
+      return {
+        title: repo.name,
+        emoji: emoji,
+        category: category,
+        blurb: blurb.substring(0, 150) + (blurb.length > 150 ? '...' : ''), // Limit blurb length
+        description: description,
+        features: features.slice(0, 4), // Limit to 4 features
+        tags: tags,
+        links: {
+          github: repo.html_url,
+          live: repo.homepage || '' // Use homepage if available
+        }
+      };
+    });
+
+    // Update cache
+    githubProjectsCache = projects;
+    githubProjectsCacheTimestamp = Date.now();
+
+    // Update the projects data
+    window.PORTFOLIO_DATA.projects = projects;
+
+    // Update the projects count in stats
+    const stat = D.profile.stats || [];
+    const i = stat.findIndex(s => s.label === 'Projects Built');
+    if (i >= 0) stat[i].value = projects.length;
+
+    // Re-render projects section with actual data
+    renderProjects();
+
+    // Notify user of successful update
+    notify('success', 'Projects updated', `Loaded ${projects.length} projects from GitHub`, 'projects.json');
+
+  } catch (error) {
+    console.error('Error fetching GitHub projects:', error);
+    // Notify user of error
+    notify('error', 'Failed to load projects', 'Could not fetch projects from GitHub. Using cached data.', 'projects.json');
+    // Re-render to show any cached data or empty state
+    renderProjects();
+  }
 }
 
 /* ─── Keyboard shortcuts ─── */
@@ -940,6 +1118,7 @@ function init() {
   updateNav();
   startClock();
   fetchGitHub();
+  fetchGitHubProjects(); // Fetch and load projects from GitHub
   tprint('Milan Dahal — Portfolio Terminal v2.0', 'ok');
   tprint("Type 'help' to see available commands.", 'info');
   notify('info', 'Welcome to my portfolio 👋', 'Scroll through my work, search (Ctrl+F), or press Ctrl+Shift+P.', 'index.html');

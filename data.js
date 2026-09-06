@@ -23,7 +23,7 @@ window.PORTFOLIO_DATA = {
     intro: 'A web developer from Kathmandu, Nepal who loves building clean, fast and user-friendly websites & web applications. Also actively learning about QA and testing while focusing mainly on automated testing. Currently looking for opportunities to create great products with great people.',
     stats: [
       { label: 'Years Coding', value: 3 },
-      { label: 'Projects Built', value: 10 },
+      { label: 'Projects Built', value: 0 }, // Will be updated from GitHub API
       { label: 'Certificates', value: 5 },
     ],
   },
@@ -98,56 +98,7 @@ skills: {
       { name: 'Vercel', level: 84 }, { name: 'Linux', level: 70 },{ name: 'Jira', level: 75 },{ name: 'Render', level: 78},{name: 'Railway', level: 80},
     ],
   },
-  projects: [
-    {
-      title: 'E-Commerce Store', emoji: '🛒', category: 'Full-stack',
-      blurb: 'Full-stack online store with cart, authentication and payment integration.',
-      description: 'A complete e-commerce experience with a product catalog, shopping cart, Stripe checkout, admin dashboard and order tracking. Built on a REST API with JWT authentication.',
-      features: ['Product catalog with search & filters', 'Shopping cart + Stripe checkout', 'JWT auth with admin dashboard', 'Order tracking & email notifications'],
-      tags: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-    {
-      title: 'Task Manager App', emoji: '✅', category: 'Frontend',
-      blurb: 'Kanban board with drag & drop, labels, deadlines and dark mode.',
-      description: 'A productivity board inspired by Trello. Create boards, drag cards between lanes, set deadlines and filter by labels. Fully responsive with persisted state.',
-      features: ['Drag & drop kanban boards', 'Labels, priorities & deadlines', 'Filtering & live search', 'Dark / light mode toggle'],
-      tags: ['React', 'TypeScript', 'LocalStorage'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-    {
-      title: 'Weather Dashboard', emoji: '🌤️', category: 'Frontend',
-      blurb: 'Real-time weather dashboard with charts, geolocation and forecasts.',
-      description: 'A weather app that uses the OpenWeatherMap API to show current conditions, an hourly chart and a 7-day forecast. Detects the user location and falls back to manual search.',
-      features: ['Live API weather data', 'Hourly charts & 7-day forecast', 'Geolocation detection', 'Unit toggle °C / °F'],
-      tags: ['JavaScript', 'REST API', 'Chart.js'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-    {
-      title: 'Chat Application', emoji: '💬', category: 'Backend',
-      blurb: 'Real-time chat rooms with typing indicators and online presence.',
-      description: 'A real-time messaging app with multiple rooms, typing indicators, read receipts and live online presence. Built on WebSockets for instant delivery.',
-      features: ['WebSocket real-time messaging', 'Rooms, typing & presence', 'Message history with MongoDB', 'Graceful reconnection'],
-      tags: ['Socket.io', 'Node.js', 'MongoDB'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-    {
-      title: 'Blog Platform', emoji: '📝', category: 'Full-stack',
-      blurb: 'Markdown-based blogging platform with tags, search and an admin panel.',
-      description: 'A CMS where writers can publish Markdown articles, attach tags, and manage posts from an admin panel. Readers get instant search, filtering and a clean reading experience.',
-      features: ['Markdown editor with preview', 'Tags, search & pagination', 'Admin auth & post management', 'SEO-friendly meta tags'],
-      tags: ['React', 'Firebase', 'Express'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-    {
-      title: 'Portfolio Website', emoji: '💻', category: 'Frontend',
-      blurb: 'This VS Code themed portfolio website you are browsing right now.',
-      description: 'The site you are looking at! A VS Code inspired portfolio with editor tabs, a working terminal, command palette, theming and a fully data-driven content layer.',
-      features: ['VS Code editor UI experience', 'Working terminal & command palette', '6 accent themes', 'Data-driven content via data.js'],
-      tags: ['HTML', 'CSS', 'JavaScript'],
-      links: { github: 'https://github.com/milandahal1000', live: '' },
-    },
-  ],
+  projects: [], // Will be populated from GitHub API
   commits: [
     { msg: 'initial commit — portfolio boilerplate', time: '3 days ago' },
     { msg: 'feat: add skills.json with proficiency levels', time: '2 days ago' },
