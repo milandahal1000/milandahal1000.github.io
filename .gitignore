@@ -1,3 +1,23 @@
 /.remember
 /.claude
 /.vscode
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor / os
+.DS_Store
+Thumbs.db
+*.local
+.impeccable/
+
+# legacy build leftovers
+dist/
+
+# parity-test build output
+tests/.tmp/

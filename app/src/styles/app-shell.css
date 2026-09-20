@@ -1,0 +1,22 @@
+/* ═══════ React mount wrapper ═══════
+   The legacy page rendered .titlebar / .workbench / .panel / .status-bar as
+   direct flex children of <body>. React mounts into #root, so #root has to be
+   the flex column that <body> used to be for the layout to stay identical. */
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Header "Terminal" menu item — the only interactive entry in the tb-menu */
+.tb-menu-term {
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.tb-menu-term:hover {
+  color: var(--text-body);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

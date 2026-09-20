@@ -1,0 +1,23 @@
+{
+  "name": "milan-dahal-portfolio",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Milan Dahal — VS Code style portfolio (React + Vite rewrite of the original HTML/CSS/JS site)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tests/parity.mjs",
+    "verify": "node tests/check-build.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^30.1.0",
+    "vite": "^8.3.0"
+  }
+}
